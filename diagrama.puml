@@ -1,0 +1,117 @@
+@startuml TexasHoldem
+
+class Carta {
+    -__nombre: str
+    -__valor: int
+    -__palo: str
+    -__es_visible: bool
+    -__imagen_filename: str
+    -__image_path: str
+    +__init__(nombre: str, valor: int, palo: str)
+    +es_visible: bool
+    +nombre: str
+    +palo: str
+    +valor: int
+    +image_path: str
+    +mostrar_carta(): None
+    +ocultar_carta(): None
+    +__cargar_imagen(): None
+    +__eq__(other: object): bool
+    +__hash__(): Any
+    +__repr__(): str
+    +__str__(): str
+}
+
+class Baraja {
+    -__cartas: set
+    +__init__()
+    +reiniciar_baraja(): None
+    +shuffle(): None
+    +deal(): Carta
+    +get_cartas(carta_por_encontrar: Carta): List[Carta]
+    +__repr__(): str
+    +__str__(): str
+}
+
+class Jugador {
+    -__nombre: str
+    -__hole_cards: list[Carta]
+    -__dinero: int
+    -__esta_en_juego: bool
+    +__init__(nombre: str)
+    +hole_cards: list[Carta]
+    +dinero: int
+    +puede_seguir_jugando: bool
+    +hole_cards(hole_cards: list[Carta]): None
+    +apostar(cantidad: int): None
+    +pasar(): None
+    +retirarse(): None
+    +mostrar_hole_cards(): None
+    +__eq__(obj: Any): bool
+    +__hash__(): Any
+    +__str__(): str
+}
+
+class Mesa {
+    -__baraja: Baraja
+    -__community_cards: list[Carta]
+    +community_cards: list[Carta]
+    +repartir_hole_cards(jugadores: List[Jugador]): None
+    +mostrar_primeras_tres_cartas(): None
+    +mostrar_cuarta_carta(): None
+    +mostrar_quinta_carta(): None
+}
+
+abstract class Ronda {
+    {abstract} +mostrar_community_cards(mesa: Mesa): None
+}
+
+class AntesDeLasRondas extends Ronda {
+}
+
+class DespuesDeLasRondas extends Ronda {
+}
+
+class PrimeraRonda extends Ronda {
+    +mostrar_community_cards(mesa: Mesa): None
+}
+
+class SegundaRonda extends Ronda {
+    +mostrar_community_cards(mesa: Mesa): None
+}
+
+class TerceraRonda extends Ronda {
+    +mostrar_community_cards(mesa: Mesa): None
+}
+
+class TexasHoldem {
+    -__apuestas: List[Apuestas]
+    -__jugadores: List[Jugador]
+    -__mesa: Mesa
+    -__ronda: Ronda
+    +MAXIMO_JUGADORES: int
+    +__init__()
+    +ronda: Ronda
+    +apuestas: List[Apuestas]
+    +guardar_apuestas(apuestas: Apuestas): None
+    +get_community_cards(): List[Carta]
+    +get_cartas_jugador(index: int = 0): List[Carta]
+    +get_jugador(index: int = 0): Jugador
+    +retirar_jugador(index: int = 0): None
+    +agregar_jugadores(jugadores: List[Jugador]): None
+    +__completar_jugadores(): None
+    +iniciar_rondas(): None
+    +cambiar_a_segunda_ronda(): None
+    +cambiar_a_tercera_ronda(): None
+    +finalizar_juego(): None
+    +mostrar_resultados(): None
+}
+
+Mesa --> "1" Baraja
+Baraja --> "*" Carta
+TexasHoldem -left-> "*" Apuestas
+TexasHoldem --> "*" Jugador
+TexasHoldem --> "1" Mesa
+TexasHoldem -right-> "1" Ronda
+
+@enduml
